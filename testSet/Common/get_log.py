@@ -16,6 +16,7 @@ class test_log():
     def __init__(self):
         self.result_folder = 'D:\\1\\'
         self.log_folder = 'D:\\1\\Logs\\'
+        self.test_pic = 'D:\\1\\test_pic\\'
         self.now = time.strftime("%Y-%m-%d_%H_%M_%S")
         #self.app_folder =
 
@@ -27,6 +28,8 @@ class test_log():
         return self.log_folder
     def get_result_folder(self):
         return self.result_folder
+    def get_test_pic_folder(self):
+        return self.test_pic
 
     def catch_logcat(self,deviceId):
         logcat_cmd = 'adb -s %s logcat -v time > %s%s_logcat_%s_.log ' % (deviceId, self.log_folder, deviceId, self.now)

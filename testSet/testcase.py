@@ -32,7 +32,7 @@ class DefineTestCase(unittest.TestCase):
         self.watcherstate = True
         while self.watcherstate == True:
             try:
-                if (self.at.driver.page_source.find(u'权限申请')) != -1 or (self.at.driver.page_source.find('com.android.packageinstaller:id/permission_message')) != -1 or (self.at.driver.page_source.find('android:id/alertTitle')) != -1 or (self.at.driver.page_source.find('com.lbe.security.miui:id/permission_message')) != -1 or (self.at.driver.page_source.find('oppo:id/permission_prompt')) != -1 :
+                if (self.at.driver.page_source.find(u'权限申请')) != -1 or (self.at.driver.page_source.find('com.android.packageinstaller:id/permission_message')) != -1 or (self.at.driver.page_source.find('android:id/alertTitle')) != -1 or (self.at.driver.page_source.find('com.lbe.security.miui:id/permission_message')) != -1 or (self.at.driver.page_source.find('miui:id/customPanel')) != -1 or (self.at.driver.page_source.find('oppo:id/permission_prompt')) != -1 :
                     #权限申请：乐视手机；谷歌手机；魅族flyme手机；华为手机；MIUI8.5; oppo color OS V3.0；
                     print u"允许权限申请"
                     try:
@@ -82,15 +82,20 @@ class DefineTestCase(unittest.TestCase):
             self.at.swipe_to_right(500)
             time.sleep(2)
             print u"右滑"
-            #driver.find_element_by_xpath("//android.widget.TextView[contains(@text, '略过·马上体验')]").click()
-            self.at.get_by_id("com.gwtsz.gts2:id/startbtn").click()
-            print u"有向导页面，跳过"
-            time.sleep(5)
+
+            print u"截图对比测试"
+            pic_compare_result = self.at.pic_comparison(0.2664,0.9083,0.7354,0.9542,'guidepage','D:\\1\\test_pic\\refer_pic\\skip_guide_refer_pic.png')
+            if pic_compare_result <100:
+                print u'截图对比后结果为'+str(pic_compare_result)
+                #driver.find_element_by_xpath("//android.widget.TextView[contains(@text, '略过·马上体验')]").click()
+                self.at.get_by_id("com.gwtsz.gts2:id/startbtn").click()
+                print u"有向导页面，跳过"
+                time.sleep(5)
 
         except NoSuchElementException:
                 print u"无向导页面，直接进入首页"
         except Exception, e:
-            self.at.screenshot_to_file('guide_page')
+            self.at.screenshot_to_file('guide_page_fail')
             print u"Error,guide page failed"
             self.assertTrue(0)
 
@@ -303,11 +308,11 @@ class DefineTestCase(unittest.TestCase):
             print u"Error,try enter_trade_page failed"
             self.assertTrue(0)
 
-    def test_case013_do_trade(self):
+    def test_case013_do_trade(self,input_lot_multiplier = 1):
         try:
             lot_range_info = self.at.get_by_ids('com.gwtsz.gts2:id/title_view_range',1).text.replace('[','_').replace(']','_').replace('-','_').replace(u'手','_')
             trade_lot_range = lot_range_info.split('_')
-            input_lot = round(random.uniform(float(trade_lot_range[1]),float(trade_lot_range[3])),1)
+            input_lot = round(random.uniform(float(trade_lot_range[1]),float(trade_lot_range[3])),1) * input_lot_multiplier
             self.at.get_by_ids('com.gwtsz.gts2:id/number_input', 1).click()
             self.at.get_by_ids('com.gwtsz.gts2:id/number_input', 1).clear()
             self.at.get_by_ids('com.gwtsz.gts2:id/number_input', 1).send_keys(str(input_lot))
@@ -330,9 +335,14 @@ class DefineTestCase(unittest.TestCase):
             elif self.at.driver.page_source.find(u"市价开仓失败")!= -1:
                 print u'市价开仓失败：'+ self.at.get_by_id('com.gwtsz.gts2:id/res_status_pro').text +self.at.get_by_id('com.gwtsz.gts2:id/res_status_content').text
                 print u'返回重新下单'
-                self.at.get_by_id('com.gwtsz.gts2:id/btn_custom_left').click()
-                DefineTestCase.test_case013_do_trade(self)
-                DefineTestCase.test_case014_check_trade_result(self)
+                if self.at.driver.page_source.find(u"保证金不足，为保证不影响您的交易，请及时补充资金(39)")!= -1:
+                    self.at.get_by_id('com.gwtsz.gts2:id/btn_custom_left').click()
+                    DefineTestCase.test_case013_do_trade(self,0.1 )
+                    DefineTestCase.test_case014_check_trade_result(self)
+                else:
+                    self.at.get_by_id('com.gwtsz.gts2:id/btn_custom_left').click()
+                    DefineTestCase.test_case013_do_trade(self)
+                    DefineTestCase.test_case014_check_trade_result(self)
             elif self.at.driver.page_source.find(u"与服务器断开连接,请稍后交易")!= -1:
                 print u'与服务器断开连接，需要重新尝试'
                 self.at.get_by_id('com.gwtsz.gts2:id/action_btn_pos').click()

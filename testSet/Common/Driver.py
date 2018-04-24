@@ -47,7 +47,7 @@ class myDriver():
         desired_caps['newCommandTimeout'] = '6000'
         desired_caps['unicodeKeyboard'] = 'True'
         desired_caps['resetKeyboard'] = 'True'
-        desired_caps['app']='C:\\Users\\Administrator\\Desktop\\forappium_V163_UAT.apk'
+        #desired_caps['app']='C:\\Users\\Administrator\\Desktop\\forappium_V164_UAT.apk'
 
         androidBigVersion = int(desired_caps['platformVersion'].split('.')[0])
         if androidBigVersion >= 5.0:
@@ -61,7 +61,7 @@ class myDriver():
         start_server_cmd = 'appium -a 127.0.0.1 -p %d --local-timezone --log-timestamp --session-override > %sServer%d_Port%d_%s.txt' % (self.port,server_log_folder,choose_test_device,self.port,now)
         subprocess.Popen(start_server_cmd,shell=True)
         print 'Starting server%d ,and its port is %d' % ((choose_test_device), (self.port))
-        time.sleep(10)
+        time.sleep(30)
 
         server_address = 'http://localhost:%d/wd/hub' % (self.port)
 

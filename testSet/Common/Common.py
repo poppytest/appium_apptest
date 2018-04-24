@@ -9,14 +9,20 @@
 
 from Driver import myDriver
 import time
+import math
+import operator
+from functools import reduce
+from PIL import Image
 from appium.webdriver.common.touch_action import TouchAction
 from appium.webdriver.common.multi_action import MultiAction
 from get_log import test_log
+
 
 class appiumMethod():
     def __init__(self):
         testlog = test_log()
         self.log_folder = testlog.get_log_folder()
+        self.pic_folder = testlog.get_test_pic_folder()
         at = myDriver()
         self.driver = at.get_driver()
         self.desired_caps = at.get_desired_caps()
@@ -154,6 +160,21 @@ class appiumMethod():
         now = time.strftime("%Y-%m-%d_%H_%M_%S_")
         file_path_and_name = self.log_folder + now + caseName + '_screenshot.png'
         self.driver.get_screenshot_as_file(file_path_and_name)
+
+    def pic_comparison(self,x1,y1,x2,y2,shot_pic_name,reference_pic):
+        #(x1,y1)(x2,y2)是需要截图的两个坐标比例, reference_pic 是指图片路径，字符串格式
+        x = self.get_Size()[0]
+        y = self.get_Size()[1]
+        shot_pic = self.pic_folder + 'screenshot_pic\\' + shot_pic_name + '.png'
+        test_pic = self.pic_folder + 'screenshot_pic\\' + shot_pic_name + '_cropfortest.png'
+        self.driver.get_screenshot_as_file(shot_pic)
+        Image.open(shot_pic).crop((x*x1,y*y1,x*x2,y*y2)).save(test_pic)
+        image1 = Image.open(test_pic)
+        image2 = Image.open(reference_pic)
+        h1 = image1.histogram()
+        h2 = image2.histogram()
+        result = math.sqrt(reduce(operator.add, list(map(lambda a, b: (a - b) ** 2, h1, h2))) / len(h2))
+        return result
 
     def press_keycode(self,keycode):
         self.driver.press_keycode(keycode)
