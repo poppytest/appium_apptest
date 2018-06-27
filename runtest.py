@@ -13,7 +13,7 @@ import time
 import sys
 import threading
 
-time.sleep(1)
+#time.sleep(1)
 
 from testSet.testsuite import DefineTestSuite
 from testSet.Common.Driver import test_device_info
@@ -45,19 +45,22 @@ if __name__ == '__main__':
     #t_logcat.start()
     testLog.catch_logcat(deviceId)
 
-    filename = '%s%s_V%s_Port%s__%s_TestResult.html' % (result_folder,deviceId,deviceVersion,str(port),now)
-    fp = open(filename,'wb')
+    filename = '%s%s_V%s_Port%s__%s_TestResult.html' % (result_folder, deviceId, deviceVersion, str(port), now)
+    fp = open(filename, 'wb')
 
     runner = HTMLTestRunner.HTMLTestRunner(
-        stream = fp,
-        title = u'%s共测试%d轮的测试报告' % (deviceId,suite.runtimes()),
-        description = u'用例的执行情况'
+        stream=fp,
+        title=u'%s共测试%d轮的测试报告' % (deviceId,suite.runtimes()),
+        description=u'用例的执行情况'
     )
 
     runner.run(testunit)
     time.sleep(1)
     fp.close()
-    toKillServer_cmd = 'for /f "tokens=5" ' + '%a in ' + "('netstat -aon^|findstr 127.0.0.1:%s^|findstr LISTENING')" % (port) + 'do @taskkill /F /PID %a'
+    #toKillServer_cmd = 'for /f "tokens=5" ' + '%a in ' + "('netstat -aon^|findstr 127.0.0.1:%s^|findstr LISTENING')" % (port) + 'do @taskkill /F /PID %a'
+
+
+    toKillServer_cmd = 'kill -9 $(lsof -t -i:%d)' % (port)
     os.system(toKillServer_cmd)   #杀掉appium server
     print u'Close appium server successfully!'
 

@@ -7,19 +7,20 @@
 # Update Date    :2017-12-5
 # ========================================================
 
-import os
-import sys
 import time
 import unittest
-import  random
+import random
 from selenium.common.exceptions import NoSuchElementException
 from Common.Common import appiumMethod
+
 
 class startdriver:
     def __init__(self):
         self.at = appiumMethod()
+
     def get_driver(self):
         return self.at
+
 
 class DefineTestCase(unittest.TestCase):
     global toinitdriver
@@ -32,9 +33,9 @@ class DefineTestCase(unittest.TestCase):
         self.watcherstate = True
         while self.watcherstate == True:
             try:
-                if (self.at.driver.page_source.find(u'权限申请')) != -1 or (self.at.driver.page_source.find('com.android.packageinstaller:id/permission_message')) != -1 or (self.at.driver.page_source.find('android:id/alertTitle')) != -1 or (self.at.driver.page_source.find('com.lbe.security.miui:id/permission_message')) != -1 or (self.at.driver.page_source.find('miui:id/customPanel')) != -1 or (self.at.driver.page_source.find('oppo:id/permission_prompt')) != -1 :
+                if (self.at.driver.page_source.find(u'权限申请')) != -1 or (self.at.driver.page_source.find('com.android.packageinstaller:id/permission_message')) != -1 or (self.at.driver.page_source.find('android:id/alertTitle')) != -1 or (self.at.driver.page_source.find('com.lbe.security.miui:id/permission_message')) != -1 or (self.at.driver.page_source.find('miui:id/customPanel')) != -1 or (self.at.driver.page_source.find('oppo:id/permission_prompt')) != -1 or (self.at.driver.page_source.find(u'com.gwtsz.gts2:id/ads_imageview')) != -1 :
                     #权限申请：乐视手机；谷歌手机；魅族flyme手机；华为手机；MIUI8.5; oppo color OS V3.0；
-                    print u"允许权限申请"
+                    #优惠券活动弹框；
                     try:
                         self.at.get_by_id('oppo:id/remember_cb').click()
                         time.sleep(1)
@@ -54,6 +55,11 @@ class DefineTestCase(unittest.TestCase):
                         time.sleep(2)
                     except:
                         pass
+                    try:
+                        self.at.get_by_id('com.gwtsz.gts2:id/btn_cancel').click()
+                        time.sleep(2)
+                    except:
+                        pass
                 else:
                     self.watcherstate = False
             except:
@@ -63,41 +69,37 @@ class DefineTestCase(unittest.TestCase):
         print "End for this case"
 
     def test_case001_open_app(self):
-
         try:
-            if (self.at.driver.page_source.find(self.at.desired_caps['appPackage']))!= -1:
+            if (self.at.driver.page_source.find(self.at.desired_caps['appPackage'])) != -1:
                 print u"打开app成功"
             else:
                 print u"打开app失败，请检查"
                 self.assertTrue(0)
-
-        except Exception, e:
+        except Exception:
             print u"Error,open app failed"
             self.at.screenshot_to_file('open_app')
             self.assertTrue(0)
-
 
     def test_case002_guide_page(self):
         try:
             self.at.swipe_to_right(500)
             time.sleep(2)
             print u"右滑"
-
-            print u"截图对比测试"
-            pic_compare_result = self.at.pic_comparison(0.2664,0.9083,0.7354,0.9542,'guidepage','D:\\1\\test_pic\\refer_pic\\skip_guide_refer_pic.png')
-            if pic_compare_result <100:
-                print u'截图对比后结果为'+str(pic_compare_result)
-                #driver.find_element_by_xpath("//android.widget.TextView[contains(@text, '略过·马上体验')]").click()
-                self.at.get_by_id("com.gwtsz.gts2:id/startbtn").click()
-                print u"有向导页面，跳过"
-                time.sleep(5)
-
+            pic_compare_result = self.at.pic_comparison(0.2664, 0.9083, 0.7354, 0.9542, 'guidepage', '//Users//bear//Documents//Work//testreport_fold//test_pic//refer_pic//skip_guide_refer_pic.png')
+            #self.at.get_by_xpath("//android.widget.TextView[contains(@text, '略过·马上体验')]").click()
+            self.at.get_by_id("com.gwtsz.gts2:id/startbtn").click()
+            print u"有向导页面，跳过"
+            time.sleep(5)
         except NoSuchElementException:
                 print u"无向导页面，直接进入首页"
-        except Exception, e:
+        except Exception:
             self.at.screenshot_to_file('guide_page_fail')
             print u"Error,guide page failed"
             self.assertTrue(0)
+        print u'截图对比后结果为' + str(pic_compare_result)
+        self.assertLessEqual(pic_compare_result, 1000, u'The case fails because its ratio exceeds expectations')
+        # 坐标截图，不同分辨率手机导致截出效果不理想，此处暂时对比度为1000
+
 
     def test_case003_close_update(self):
         try:
@@ -107,7 +109,7 @@ class DefineTestCase(unittest.TestCase):
 
         except NoSuchElementException:
             print u"无升级提示"
-        except Exception, e:
+        except Exception:
             print u"Error, close ad failed"
             self.assertTrue(0)
 
@@ -119,7 +121,7 @@ class DefineTestCase(unittest.TestCase):
 
         except NoSuchElementException:
                 print u"无弹框广告"
-        except Exception, e:
+        except Exception:
             self.at.screenshot_to_file('close_ad')
             print u"Error, close ad failed"
             self.assertTrue(0)
@@ -129,7 +131,7 @@ class DefineTestCase(unittest.TestCase):
             self.at.get_by_xpath("//android.widget.TextView[@text='我']").click()
             print u"打开'我'页面成功"
             time.sleep(5)
-        except Exception, e:
+        except Exception:
             self.at.screenshot_to_file('enter_MyPage')
             print u"Error, open My Page failed"
             self.assertTrue(0)
@@ -140,7 +142,7 @@ class DefineTestCase(unittest.TestCase):
             self.at.get_by_id("com.gwtsz.gts2:id/login_btn").click()
             print u"进入登陆页面"
             time.sleep(5)
-        except Exception, e:
+        except Exception:
             self.at.screenshot_to_file('enter_LoginPage')
             print u"Error, open Login Page failed"
             self.assertTrue(0)
@@ -148,16 +150,16 @@ class DefineTestCase(unittest.TestCase):
     def test_case007_try_login_byPhone(self):
         try:
             #print u"登陆账户为：18044441234/a123456（PRD场账户）"
-            print u"登陆账户为：13811113333/a123456（uat场账户）"
+            print u"登陆账户为：13811113333/ab123456（uat场账户）"
             self.at.get_by_id("com.gwtsz.gts2:id/loginnameEditText").click()
             self.at.get_by_id("com.gwtsz.gts2:id/loginnameEditText").send_keys("13811113333")
             time.sleep(2)
             self.at.get_by_id("com.gwtsz.gts2:id/password").click()
-            self.at.get_by_id("com.gwtsz.gts2:id/password").send_keys("a123456")
+            self.at.get_by_id("com.gwtsz.gts2:id/password").send_keys("ab123456")
             time.sleep(2)
             self.at.get_by_id("com.gwtsz.gts2:id/sign_in_button").click()
             time.sleep(21)
-        except Exception, e:
+        except Exception:
             self.at.screenshot_to_file('try_login_byPhone')
             print u"Error,try login by phoneNum failed"
             self.assertTrue(0)
@@ -190,7 +192,7 @@ class DefineTestCase(unittest.TestCase):
                     print u"some error happened, please check"
                     self.assertTrue(0)
 
-        except Exception, e:
+        except Exception:
             self.at.screenshot_to_file('check_login_state')
             print u"Error,try login by phoneNum failed"
             self.assertTrue(0)
@@ -204,7 +206,7 @@ class DefineTestCase(unittest.TestCase):
             self.at.get_by_name(u'行情').click()
             self.at.get_by_name(u'行情').click()   #跳过向导
             self.at.get_by_name(u'行情').click()   #跳过向导
-        except Exception, e:
+        except Exception:
             self.at.screenshot_to_file('enter_market_page')
             print u'Error,try enter_market_page failed'
             self.assertTrue(0)
@@ -215,8 +217,8 @@ class DefineTestCase(unittest.TestCase):
         global_product_num = product_num
         try:
             self.at.get_by_ids('com.gwtsz.gts2:id/ll_product_item', global_product_num).click()
-            time.sleep(5)
-        except Exception, e:
+            time.sleep(10)
+        except Exception:
             self.at.screenshot_to_file('enter_chart_page')
             print u"Error,try enter_chart_page failed"
             self.assertTrue(0)
@@ -239,6 +241,8 @@ class DefineTestCase(unittest.TestCase):
             self.at.pinch()
             time.sleep(5)
             print u'缩放K线'
+            time.sleep(1)
+            self.at.swipe_to_left()
             self.at.get_by_id('com.gwtsz.gts2:id/arrow_view').click()
             print u'回到当前K线'
             time.sleep(1)
@@ -250,13 +254,13 @@ class DefineTestCase(unittest.TestCase):
             time.sleep(2)
             self.at.get_by_name(u'RSI').click()
             time.sleep(1)
-            if self.at.driver.page_source.find(u"PBX")== -1 or self.at.driver.page_source.find(u"RSI")== -1:
+            if self.at.driver.page_source.find(u"PBX") == -1 or self.at.driver.page_source.find(u"RSI") == -1:
                 print u'切换指标失败，请检查'
                 self.at.screenshot_to_file('chart_action')
                 self.assertTrue(0)
             else:
                 print u'切换指标成功'
-        except Exception, e:
+        except Exception:
             self.at.screenshot_to_file('chart_action')
             print u"Error,try chart_action failed"
             self.assertTrue(0)
@@ -264,7 +268,7 @@ class DefineTestCase(unittest.TestCase):
     def test_case012_enter_trade_page(self):
         global global_product_num
         try:
-            current_product = self.at.get_by_id('com.gwtsz.gts2:id/app_title').text.replace('\n','')
+            current_product = self.at.get_by_id('com.gwtsz.gts2:id/app_title').text.replace('\n', '')
             self.at.get_by_id('com.gwtsz.gts2:id/buy_price_layout').click()
             time.sleep(1)
             if self.at.driver.page_source.find(u"市价")!= -1:
@@ -278,7 +282,7 @@ class DefineTestCase(unittest.TestCase):
                 self.at.get_by_id('com.gwtsz.gts2:id/title_left_btn').click()
                 time.sleep(1)
                 global_product_num = global_product_num + 1
-                DefineTestCase.test_case010_enter_chart_page(self,global_product_num)
+                DefineTestCase.test_case010_enter_chart_page(self, global_product_num)
                 DefineTestCase.test_case012_enter_trade_page(self)
             elif self.at.driver.page_source.find(u"参考行情，不提供交易服务") != -1:
                 print u'当前产品(%s)是参考行情，无法进入下单页面' % (current_product)
@@ -286,7 +290,7 @@ class DefineTestCase(unittest.TestCase):
                 self.at.get_by_id('com.gwtsz.gts2:id/title_left_btn').click()
                 time.sleep(1)
                 global_product_num = global_product_num + 1
-                DefineTestCase.test_case010_enter_chart_page(self,global_product_num)
+                DefineTestCase.test_case010_enter_chart_page(self, global_product_num)
                 DefineTestCase.test_case012_enter_trade_page(self)
             elif self.at.driver.page_source.find(u"产品已过期，不可交易") != -1:
                 print u'当前产品(%s)已过期，无法进入下单页面' % (current_product)
@@ -303,27 +307,27 @@ class DefineTestCase(unittest.TestCase):
                 time.sleep(1)
                 DefineTestCase.test_case012_enter_trade_page(self)
 
-        except Exception, e:
+        except Exception:
             self.at.screenshot_to_file('enter_trade_page')
             print u"Error,try enter_trade_page failed"
             self.assertTrue(0)
 
-    def test_case013_do_trade(self,input_lot_multiplier = 1):
+    def test_case013_do_trade(self, input_lot_multiplier = 1):
         try:
-            lot_range_info = self.at.get_by_ids('com.gwtsz.gts2:id/title_view_range',1).text.replace('[','_').replace(']','_').replace('-','_').replace(u'手','_')
+            lot_range_info = self.at.get_by_ids('com.gwtsz.gts2:id/title_view_range', 1).text.replace('[', '_').replace(']', '_').replace('-', '_').replace(u'手', '_')
             trade_lot_range = lot_range_info.split('_')
-            input_lot = round(random.uniform(float(trade_lot_range[1]),float(trade_lot_range[3])),1) * input_lot_multiplier
+            input_lot = round(random.uniform(float(trade_lot_range[1]), float(trade_lot_range[3])), 1) * input_lot_multiplier
             self.at.get_by_ids('com.gwtsz.gts2:id/number_input', 1).click()
             self.at.get_by_ids('com.gwtsz.gts2:id/number_input', 1).clear()
             self.at.get_by_ids('com.gwtsz.gts2:id/number_input', 1).send_keys(str(input_lot))
             print u'尝试下单'+str(input_lot)+u'手，若合适，则进行下一步'
-            if self.at.driver.page_source.find("com.gwtsz.gts2:id/morder_alarm_title")== -1:
+            if self.at.driver.page_source.find("com.gwtsz.gts2:id/morder_alarm_title") == -1:
                 self.at.get_by_id('com.gwtsz.gts2:id/btn_custom_confirm').click()
                 time.sleep(61) #网络慢时会延时60s才弹提示框
             else:
                 print u'输入错误，继续改手数'
                 DefineTestCase.test_case013_do_trade(self)
-        except Exception,e:
+        except Exception:
             self.at.screenshot_to_file('do_trade')
             print u"Error,try trade failed"
             self.assertTrue(0)
@@ -337,7 +341,7 @@ class DefineTestCase(unittest.TestCase):
                 print u'返回重新下单'
                 if self.at.driver.page_source.find(u"保证金不足，为保证不影响您的交易，请及时补充资金(39)")!= -1:
                     self.at.get_by_id('com.gwtsz.gts2:id/btn_custom_left').click()
-                    DefineTestCase.test_case013_do_trade(self,0.1 )
+                    DefineTestCase.test_case013_do_trade(self, 0.1)
                     DefineTestCase.test_case014_check_trade_result(self)
                 else:
                     self.at.get_by_id('com.gwtsz.gts2:id/btn_custom_left').click()
@@ -350,14 +354,14 @@ class DefineTestCase(unittest.TestCase):
                 self.at.get_by_id('com.gwtsz.gts2:id/btn_custom_confirm').click()
                 time.sleep(61)
                 DefineTestCase.test_case014_check_trade_result(self)
-            elif self.at.driver.page_source.find(u"提示")!= -1:
+            elif self.at.driver.page_source.find(u"提示")!= -1 :
                 print u'提交订单时网络状态不好，订单可能成交也可能未成交，故执行重新下单'
                 self.at.get_by_id('com.gwtsz.gts2:id/action_btn_pos').click()
                 time.sleep(5)
                 DefineTestCase.test_case012_enter_trade_page(self)
                 DefineTestCase.test_case013_do_trade(self)
                 DefineTestCase.test_case014_check_trade_result(self)
-        except Exception,e:
+        except Exception:
             self.at.screenshot_to_file('check_trade_result')
             print u"Error,try check_trade_result failed"
             self.assertTrue(0)

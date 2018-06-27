@@ -39,4 +39,3 @@ class DefineTestSuite():
         
     def runtimes(self):
         return int(self.n)
-    

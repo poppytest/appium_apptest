@@ -14,9 +14,9 @@ import subprocess
 
 class test_log():
     def __init__(self):
-        self.result_folder = 'D:\\1\\'
-        self.log_folder = 'D:\\1\\Logs\\'
-        self.test_pic = 'D:\\1\\test_pic\\'
+        self.result_folder = '//Users//bear//Documents//Work//testreport_fold//'
+        self.log_folder = '//Users//bear//Documents//Work//testreport_fold//Logs//'
+        self.test_pic = '//Users//bear//Documents//Work//testreport_fold//test_pic//'
         self.now = time.strftime("%Y-%m-%d_%H_%M_%S")
         #self.app_folder =
 

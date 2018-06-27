@@ -47,7 +47,7 @@ class myDriver():
         desired_caps['newCommandTimeout'] = '6000'
         desired_caps['unicodeKeyboard'] = 'True'
         desired_caps['resetKeyboard'] = 'True'
-        #desired_caps['app']='C:\\Users\\Administrator\\Desktop\\forappium_V164_UAT.apk'
+        #desired_caps['app']='//Users//bear//Downloads//forappium_V164_UAT.apk'
 
         androidBigVersion = int(desired_caps['platformVersion'].split('.')[0])
         if androidBigVersion >= 5.0:
@@ -66,6 +66,7 @@ class myDriver():
         server_address = 'http://localhost:%d/wd/hub' % (self.port)
 
         self.driver = webdriver.Remote(server_address, desired_caps)
+        #self.driver.implicitly_wait('10')
 
         global port
         port = self.port
@@ -95,9 +96,9 @@ class test_device_info():
     def get_deviceVersion(self):
         return testDeviceVersion
 
-if __name__ == '__main__':
-    aa = myDriver()
-    bb = test_device_info()
-    print bb.get_port()
-    print bb.get_deviceId()
-    print bb.get_deviceVersion()
+# if __name__ == '__main__':
+#     aa = myDriver()
+#     bb = test_device_info()
+#     print bb.get_port()
+#     print bb.get_deviceId()
+#     print bb.get_deviceVersion()

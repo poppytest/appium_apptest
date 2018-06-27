@@ -49,7 +49,7 @@ class get_devices():
                     deviceVersion = re.findall(r'\S*', deviceAndroidVersion[0])[0]
                     self.deviceVersion.append(deviceVersion)
 
-        except Exception,e:
+        except Exception:
             print u"adb error,please check!"
             sys.exit()
 

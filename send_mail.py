@@ -13,7 +13,7 @@ def sendtestmail(attachmentAddress = None):
     yag = yagmail.SMTP(user='autotestbyjordan@gmail.com', password='!@c20171111', host='smtp.gmail.com')
 
     #收件人
-    receiver = ['martin.liu@gwtsz.net','jordan.wang@gwtsz.net']
+    receiver = ['martin.liu@gwtsz.net', 'jordan.wang@gwtsz.net']
 
     #抄送收件人
     cc = ['245302644@qq.com']
