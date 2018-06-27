@@ -11,10 +11,6 @@ import os
 import HTMLTestRunner
 import time
 import sys
-import threading
-
-#time.sleep(1)
-
 from testSet.testsuite import DefineTestSuite
 from testSet.Common.Driver import test_device_info
 from testSet.Common.get_log import test_log
@@ -58,12 +54,9 @@ if __name__ == '__main__':
     time.sleep(1)
     fp.close()
     #toKillServer_cmd = 'for /f "tokens=5" ' + '%a in ' + "('netstat -aon^|findstr 127.0.0.1:%s^|findstr LISTENING')" % (port) + 'do @taskkill /F /PID %a'
-
-
     toKillServer_cmd = 'kill -9 $(lsof -t -i:%d)' % (port)
     os.system(toKillServer_cmd)   #杀掉appium server
     print u'Close appium server successfully!'
-
     #sendtestmail(filename)
     #print u'Report发送成功,请查收'
 
