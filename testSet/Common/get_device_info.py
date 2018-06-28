@@ -11,6 +11,8 @@ import os
 #import subprocess
 import sys
 import re
+
+
 class get_devices():
     def __init__(self):
         try:
@@ -30,26 +32,32 @@ class get_devices():
                 self.deviceName.append(deviceId)
                 self.deviceNum = 1
 
-                deviceAndroidVersion = list(os.popen("adb shell getprop ro.build.version.release" ).readlines())
+                deviceAndroidVersion = list(
+                    os.popen("adb shell getprop ro.build.version.release").readlines())
                 self.deviceVersion = []
-                self.deviceVersion.append(re.findall(r'\S*', deviceAndroidVersion[0])[0])
+                self.deviceVersion.append(re.findall(
+                    r'\S*', deviceAndroidVersion[0])[0])
 
             else:
                 self.deviceNum = len(readDeviceId) - 2
                 print u"%d devices connected:" % (self.deviceNum)
                 self.deviceName = []
-                for devices in readDeviceId[1:(self.deviceNum+1)]:
+                for devices in readDeviceId[1:(self.deviceNum + 1)]:
                     deviceId = re.findall(r'\S*', devices)[0]
                     self.deviceName.append(deviceId)
                     print deviceId
 
                 self.deviceVersion = []
                 for i in range(self.deviceNum):
-                    deviceAndroidVersion = list(os.popen("adb -s %s shell getprop ro.build.version.release" % (self.deviceName[i])).readlines())
-                    deviceVersion = re.findall(r'\S*', deviceAndroidVersion[0])[0]
+                    deviceAndroidVersion = list(
+                        os.popen(
+                            "adb -s %s shell getprop ro.build.version.release" %
+                            (self.deviceName[i])).readlines())
+                    deviceVersion = re.findall(
+                        r'\S*', deviceAndroidVersion[0])[0]
                     self.deviceVersion.append(deviceVersion)
 
-        except Exception,e:
+        except Exception:
             print u"adb error,please check!"
             sys.exit()
 
